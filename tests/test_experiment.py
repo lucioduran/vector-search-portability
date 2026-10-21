@@ -122,3 +122,14 @@ def test_repository_rules():
     for filename in tracked:
         if Path(filename).suffix in {".py", ".md", ".yml", ".toml", ".txt"}:
             assert chr(0x2014) not in Path(filename).read_text(), filename
+
+
+def test_zero_cpu_delta_does_not_become_negative(monkeypatch):
+    from types import SimpleNamespace
+
+    from vector_portability.experiment import Resources
+
+    resource = Resources()
+    times = SimpleNamespace(user=0.41, system=0.04)
+    monkeypatch.setattr(resource, "process", SimpleNamespace(cpu_times=lambda: times))
+    assert resource.measure(lambda: None)["cpu_seconds"] == 0.0

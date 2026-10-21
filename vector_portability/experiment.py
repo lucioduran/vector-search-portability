@@ -98,7 +98,7 @@ class Resources:
         after = self.process.cpu_times()
         return {
             "wall_seconds": seconds,
-            "cpu_seconds": after.user + after.system - before.user - before.system,
+            "cpu_seconds": (after.user + after.system) - (before.user + before.system),
         }
 
 
