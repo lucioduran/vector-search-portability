@@ -31,7 +31,17 @@ python3 scripts/setup.py
 ```
 
 On Windows use `.venv\Scripts\python.exe` and an appropriate C++ compiler.
-SQLite must support loadable extensions. No server, Docker, model download,
+SQLite must support loadable extensions. Some python.org macOS builds disable
+this feature. On those builds, use an extension-enabled standalone Python:
+
+```sh
+uv python install 3.11.13
+uv venv --python 3.11.13 --seed .venv
+.venv/bin/python scripts/setup.py
+```
+
+CI uses Python 3.11.9 on Linux and standalone Python 3.11.13 on macOS ARM64.
+No server, Docker, model download,
 API key or paid service is required.
 
 ## Usage
