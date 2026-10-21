@@ -58,8 +58,8 @@ issues one synchronous request at a time. One and four client threads run 400
 requests each; native thread limits remain one. Query/filter schedule is saved.
 This is a finite closed-loop saturation workload with no think time, arrival
 rate, network or external queue. Per-request latency covers adapter calls;
-throughput covers barrier release through all completed clients, including
-Python bookkeeping. Thread-local SQLite connections avoid serializing all reads
+throughput starts just before the main thread waits at the barrier and ends
+after all completed clients, including any remaining warmup and Python bookkeeping. Thread-local SQLite connections avoid serializing all reads
 through one connection. HNSW Python predicates contend on the GIL.
 
 RSS is sampled every 10 ms from the isolated process, after dataset loading and

@@ -90,7 +90,46 @@ Recorded results are never removed by that script.
 
 ## Results
 
-The reference experiment and measured results will be recorded here before release.
+Measured on 2026-10-21: Intel Xeon W-3223, 16 logical CPUs, 48 GiB RAM,
+Intel macOS 26.7.1, Python 3.11.13. Values below are medians of three trial
+measurements, including the median of each trial's percentile, not pooled
+percentiles. All 9,600 saved searches pass independent evidence verification.
+
+| Engine | Ingest 5,000 (s) | Update 500 (s) | Sampled peak RSS (MiB) | Snapshot (MiB) |
+| --- | ---: | ---: | ---: | ---: |
+| hnswlib | 0.287 | 0.236 | 95.5 | 2.04 |
+| sqlite-vec | 0.116 | 0.031 | 104.5 | 1.52 |
+
+| Engine | Read clients | Requests/s | P50 (ms) | P95 (ms) |
+| --- | ---: | ---: | ---: | ---: |
+| hnswlib | 1 | 1503.6 | 0.363 | 2.295 |
+| hnswlib | 4 | 100.3 | 9.402 | 149.332 |
+| sqlite-vec | 1 | 1412.7 | 0.666 | 0.801 |
+| sqlite-vec | 4 | 2637.5 | 1.476 | 1.660 |
+
+Each load trial has 400 requests: 120 unrestricted, 120 tenant-filtered,
+80 active-filtered and 80 selectively filtered. Both engines achieve strict
+recall@10 = 1.0 with native filtering before and after updates on all nonempty
+query groups. Native result loss is zero. This small fixture did not expose
+approximation error at the frozen HNSW settings.
+
+After updates, both engines' diagnostic postfilter mode has recall 0.4725 and
+result loss 0.5275 for tenant filtering. For the selective filter, recall is
+0.0275 and result loss is 0.9725, despite 14 eligible vectors. Retrieving 40 global
+neighbors is insufficient for these predicates.
+
+Four clients sharply degrade this HNSW Python adapter on the mixed workload.
+The adapter combines a Python predicate, GIL contention and O(N) mask creation;
+this experiment does not isolate their individual contributions. These results
+are not a general ranking of HNSW against SQLite, nor a production scaling claim.
+Ingestion timing also compares different durability semantics.
+
+- [Manifest and report hashes](results/reference/manifest.json)
+- [hnswlib trial 1](results/reference/hnswlib-0.json), [trial 2](results/reference/hnswlib-1.json), [trial 3](results/reference/hnswlib-2.json)
+- [sqlite-vec trial 1](results/reference/sqlite-vec-0.json), [trial 2](results/reference/sqlite-vec-1.json), [trial 3](results/reference/sqlite-vec-2.json)
+- [Evidence notes](results/README.md) and [methodology](docs/methodology.md)
+
+Run `.venv/bin/python scripts/report.py` to regenerate the table values.
 
 ## Testing
 
