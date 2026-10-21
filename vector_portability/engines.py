@@ -23,7 +23,7 @@ class Engine(Protocol):
 class Base:
     def __init__(self, path: Path, dimension: int) -> None:
         self.path, self.dimension = path, dimension
-        self.meta = np.empty((0, 3), dtype=np.int64)
+        self.meta: IntArray = np.empty((0, 3), dtype=np.int64)
         self.ready = False
 
     def validate_build(self, x: FloatArray, meta: IntArray) -> tuple[FloatArray, IntArray]:
@@ -136,8 +136,8 @@ class SqliteVec(Base):
             connection.executemany(
                 "UPDATE vectors SET embedding=?, tenant=?, active=?, bucket=? WHERE rowid=?",
                 [
-                    (row.astype("<f4").tobytes(), *map(int, tag), int(i))
-                    for i, row, tag in zip(ids, x, meta, strict=True)
+                    (row.astype("<f4").tobytes(), *map(int, meta[j].tolist()), int(i))
+                    for j, (i, row) in enumerate(zip(ids, x, strict=True))
                 ],
             )
         self.meta[ids] = meta
