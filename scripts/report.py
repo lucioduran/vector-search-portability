@@ -11,7 +11,7 @@ for engine in ("hnswlib", "sqlite-vec"):
         for path in sorted((root / "results/reference").glob(f"{engine}-*.json"))
     ]
 
-    def median(*keys):
+    def median(*keys, reports=reports):
         values = []
         for report in reports:
             value = report
