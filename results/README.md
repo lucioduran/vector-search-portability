@@ -26,3 +26,26 @@ rankings but do not add a separate aggregate load recall claim.
 The same inputs are reused across trials. Three repetitions are not three
 independent datasets. No human review, external audit, semantic retrieval result,
 network load, paid compute or hosted inference result is claimed.
+
+## Confirmation after CPU accounting fix
+
+Linux CI exposed floating-point cancellation when unchanged process CPU samples
+were subtracted one component at a time. Commit
+`a416742cb7df20476b67c75dc4c13fe67c2d7ead` groups each sample's user + system sum
+before subtraction. A regression test covers unchanged samples. The reference
+reports are preserved verbatim; none had an invalid negative phase timing.
+
+A separate three-repeat run in `results/confirmation` used that clean commit,
+the same input bytes and the same exclusive benchmark wrapper. All six source
+manifests identify the corrected implementation, and all 9,600 searches verify.
+CI verifies both evidence sets. The original tables remain the original run's
+measurements, so no favorable replacement of timing observations is hidden.
+
+| Engine | Ingestion median (s) | Update median (s) | 1-client requests/s | 4-client requests/s | 4-client P95 (ms) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| hnswlib | 0.282 | 0.236 | 1494.4 | 100.0 | 150.289 |
+| sqlite-vec | 0.116 | 0.021 | 1528.3 | 2695.9 | 1.626 |
+
+Native recall remains 1.0 and native result loss remains zero. Selective
+postfilter recall remains 0.0275 with 0.9725 result loss after updates. Variability
+in timing, including SQLite update latency, is retained in the raw reports.

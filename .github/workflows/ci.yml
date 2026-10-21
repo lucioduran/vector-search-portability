@@ -35,3 +35,4 @@ jobs:
       - run: python -m mypy vector_portability
       - run: python -m pytest --cov=vector_portability --cov-report=term-missing --cov-fail-under=90
       - run: python -m vector_portability verify --output results/reference
+      - run: python -m vector_portability verify --output results/confirmation

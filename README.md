@@ -103,7 +103,8 @@ Recorded results are never removed by that script.
 Measured on 2026-10-21: Intel Xeon W-3223, 16 logical CPUs, 48 GiB RAM,
 Intel macOS 26.7.1, Python 3.11.13. Values below are medians of three trial
 measurements, including the median of each trial's percentile, not pooled
-percentiles. All 9,600 saved searches pass independent evidence verification.
+percentiles. All 9,600 reference searches pass independent evidence verification. A separate
+confirmation run adds 9,600 verified searches after the CPU accounting fix.
 
 | Engine | Ingest 5,000 (s) | Update 500 (s) | Sampled peak RSS (MiB) | Snapshot (MiB) |
 | --- | ---: | ---: | ---: | ---: |
@@ -140,6 +141,10 @@ Ingestion timing also compares different durability semantics.
 - [Evidence notes](results/README.md) and [methodology](docs/methodology.md)
 
 Run `.venv/bin/python scripts/report.py` to regenerate the table values.
+The [confirmation evidence](results/confirmation/manifest.json) retains the same
+native recall and selective postfilter loss. Its four-client median throughput
+is 100.0 requests/s for hnswlib and 2695.9 for sqlite-vec. See
+[evidence notes](results/README.md) for the reason for this separate run.
 
 ## Testing
 
@@ -149,6 +154,7 @@ Run `.venv/bin/python scripts/report.py` to regenerate the table values.
 .venv/bin/python -m ruff format --check .
 .venv/bin/python -m mypy vector_portability
 .venv/bin/python -m vector_portability verify --output results/reference
+.venv/bin/python -m vector_portability verify --output results/confirmation
 ```
 
 Tests use both real engines, hand-calculated rankings, metadata updates, empty

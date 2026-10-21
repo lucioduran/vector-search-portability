@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "dataset_sha256": "53fd9ca277d581075d2eb7df63348fbd52e92d4a0797b1e40454367ed3d409e0",
+  "repeats": 3,
+  "requests": 400,
+  "k": 10,
+  "reports": [
+    {
+      "file": "hnswlib-0.json",
+      "sha256": "7955167ae5ff5e8c637dc3e12ca14d9202b360464911142cc1d0454a43ec829f"
+    },
+    {
+      "file": "sqlite-vec-0.json",
+      "sha256": "7f36e6564837fa84d5a0752918f119da0d7b1887cc1665003f3ea45b335a2c44"
+    },
+    {
+      "file": "sqlite-vec-1.json",
+      "sha256": "abbc9a9df4098590eec79607e47a9605aae120846c6739fdde7e81d910532732"
+    },
+    {
+      "file": "hnswlib-1.json",
+      "sha256": "7e355b934db5a0308c02fa104ada806185cc3a10e2d2a94b9c154991ba6a626d"
+    },
+    {
+      "file": "hnswlib-2.json",
+      "sha256": "cc26423d2f252963177f3b9ed5ef1c9ebed4e71eadf31e528afaa3559fc544e3"
+    },
+    {
+      "file": "sqlite-vec-2.json",
+      "sha256": "ed4054e713bc0393d8c410d5f5e5beefb24ce5adbb57a82ed6ca993de39cef2f"
+    }
+  ]
+}
